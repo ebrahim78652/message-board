@@ -10,12 +10,10 @@ const {
 
 postsRouter.route("/").get(getAllPosts).post(addAPost);
 
-postsRouter
-  .route("/:_id", () => {
-    console.log("middle ware that is run for the id!");
-    next();
-  })
-  .put(updateAPost)
-  .delete(deleteAPost);
+postsRouter.all("/:_id", (req, res, next) => {
+  console.log("all method called");
+  next();
+});
+postsRouter.route("/:_id").put(updateAPost).delete(deleteAPost);
 
 module.exports = postsRouter;

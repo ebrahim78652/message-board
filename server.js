@@ -10,10 +10,9 @@ mongoose.connect("mongodb://localhost:27017/message-board");
 app.use("/posts", postsRouter);
 
 //set up global error handling
-app.use((req, res, next, error) => {
+app.use((error, req, response, next) => {
   console.log("global error handler called!");
-  console.log(error.message);
-  res.status(500).json(error);
+  response.status(500).json({ error: "an error happened" });
 });
 
 app.listen(3000, () => {

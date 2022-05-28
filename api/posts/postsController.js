@@ -1,3 +1,4 @@
+const { command } = require("cli");
 const mongoose = require("mongoose");
 const messageModel = require("./postsModel");
 
@@ -17,18 +18,27 @@ const addAPost = async (req, res, next) => {
 };
 
 //sending the id as a parameter and in the body of the request
+
 const updateAPost = async (req, res, next) => {
   console.log("PUT called");
   console.log(req.params);
   console.log(req.body.updated);
 
-  const message = messageModel.updateOne(req.params, req.body.updated).exec();
+  const message = await messageModel
+    .updateOne(req.params, req.body.updated)
+    .exec()
+    .catch((err) => {
+      console.log("error handler 1 in PUT called");
+      return next(err);
+    });
 
   console.log(message);
   const messageUpdated = await messageModel
     .find(req.params)
     .exec()
     .catch((err) => {
+      console.log("error handler 2 in PUT called");
+      console.log(err);
       next(err);
     });
   console.log(messageUpdated);

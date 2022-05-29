@@ -24,25 +24,20 @@ const updateAPost = async (req, res, next) => {
   console.log(req.params);
   console.log(req.body.updated);
 
-  const message = await messageModel
-    .updateOne(req.params, req.body.updated)
-    .exec()
-    .catch((err) => {
-      console.log("error handler 1 in PUT called");
-      return next(err);
-    });
+  try {
+    const message = await messageModel
+      .updateOne(req.params, req.body.updated)
+      .exec();
 
-  console.log(message);
-  const messageUpdated = await messageModel
-    .find(req.params)
-    .exec()
-    .catch((err) => {
-      console.log("error handler 2 in PUT called");
-      console.log(err);
-      next(err);
-    });
-  console.log(messageUpdated);
-  res.status(201).send(messageUpdated);
+    console.log(message);
+    const messageUpdated = await messageModel.find(req.params).exec();
+
+    console.log(messageUpdated);
+    res.status(201).send(messageUpdated);
+  } catch (err) {
+    console.log("error handler 1 in PUT called");
+    next(err);
+  }
 };
 
 const deleteAPost = async (req, res, next) => {

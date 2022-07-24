@@ -14,7 +14,11 @@ const addAPost = async (req, res, next) => {
   console.log("adding a new post");
   const messageToBeAdded = req.body;
   const message = await messageModel.create([messageToBeAdded]);
-  res.status(200).json(messageToBeAdded);
+
+  const messageUpdated = await messageModel.find(req.body).exec();
+
+  console.log(messageUpdated);
+  res.status(201).send(messageUpdated);
 };
 
 //sending the id as a parameter and in the body of the request
@@ -26,10 +30,11 @@ const updateAPost = async (req, res, next) => {
 
   try {
     const message = await messageModel
-      .updateOne(req.params, req.body.updated)
+      .updateOne(req.params, { text: req.body.updated })
       .exec();
 
     console.log(message);
+
     const messageUpdated = await messageModel.find(req.params).exec();
 
     console.log(messageUpdated);
